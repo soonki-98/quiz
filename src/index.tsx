@@ -15,6 +15,7 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      //@ts-expect-error suspense is needed
       suspense: true,
       refetchOnWindowFocus: false,
     },
