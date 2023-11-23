@@ -61,6 +61,7 @@ export default function Solve() {
               {
                 myAnswer,
                 correctAnswer,
+                question: data.results[activeStep].question,
                 isCorrect: myAnswer === correctAnswer,
               },
             ];

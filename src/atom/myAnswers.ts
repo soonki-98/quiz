@@ -10,6 +10,7 @@ type Answer = {
   myAnswer: string;
   isCorrect: boolean;
   correctAnswer: string;
+  question: string;
 };
 
 export const myAnswerAtom = atom<Answer[]>({
