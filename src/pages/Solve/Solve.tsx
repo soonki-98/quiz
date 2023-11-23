@@ -73,6 +73,9 @@ export default function Solve() {
                 </StepLabel>
 
                 <Column horizonAlign="center">
+                  {/**
+                   * 문제 리스트
+                   */}
                   <FormControl>
                     <FormLabel>
                       <Typography variant="body1" color="CaptionText">
@@ -86,6 +89,9 @@ export default function Solve() {
                     />
                   </FormControl>
 
+                  {/**
+                   * 퀴즈 난이도
+                   */}
                   <Row gap={10}>
                     <Typography
                       variant="h6"
