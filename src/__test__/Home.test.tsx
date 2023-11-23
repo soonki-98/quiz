@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
   },
 });
 
-describe("Home Component", () => {
+describe("Home Page", () => {
   it("renders correctly", () => {
     render(
       <BrowserRouter>

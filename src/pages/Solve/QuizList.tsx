@@ -32,7 +32,7 @@ export default React.memo(function QuizList({
           <FormControlLabel
             value={answer}
             key={answer}
-            control={<Radio onChange={onChange} />}
+            control={<Radio data-testid="select-answer" onChange={onChange} />}
             label={decode(answer)}
           />
         );

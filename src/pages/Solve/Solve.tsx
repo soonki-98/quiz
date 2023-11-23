@@ -79,9 +79,12 @@ export default function Solve() {
     setCheckedAnswer(ev.target.value);
   };
 
-  if (!data || rest.failureReason) return <Skeleton />;
+  if (!data || rest.failureReason) return <Skeleton data-testid="solve-page" />;
   return (
-    <Column style={{ width: "100vw", height: "100vh" }}>
+    <Column
+      style={{ width: "100vw", height: "100vh" }}
+      data-testid="solve-page"
+    >
       <Column
         verticalAlign="center"
         horizonAlign="center"
