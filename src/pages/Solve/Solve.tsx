@@ -19,7 +19,7 @@ import {
 import { decode } from "he";
 
 import { getQuiz } from "../../apis/quiz";
-import { Column, Row } from "../../components";
+import { Column, Row, Skeleton } from "../../components";
 import QuizList from "./QuizList";
 
 export default function Solve() {
@@ -35,7 +35,7 @@ export default function Solve() {
     return result;
   }, [searchParams]);
 
-  const { data } = useQuery({
+  const { data, ...rest } = useQuery({
     queryKey: ["solve", solveQueries],
     queryFn: () => {
       const { amount, category, difficulty, type } = solveQueries;
@@ -47,7 +47,7 @@ export default function Solve() {
     setCheckedAnswer(ev.target.value);
   };
 
-  if (!data) return null;
+  if (!data || rest.failureReason) return <Skeleton />;
   return (
     <Column style={{ width: "100vw", height: "100vh" }}>
       <Column

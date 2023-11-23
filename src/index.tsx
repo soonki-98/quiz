@@ -1,13 +1,12 @@
 import React, { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Skeleton } from "@mui/material";
 
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { Column } from "./components";
 import { BrowserRouter } from "react-router-dom";
+import { Skeleton } from "./components";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -26,47 +25,7 @@ const queryClient = new QueryClient({
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
-      <Suspense
-        fallback={
-          <Column
-            gap={16}
-            verticalAlign="center"
-            horizonAlign="center"
-            style={{ margin: "auto", width: "100%", height: "100vh" }}
-          >
-            <Skeleton
-              animation="wave"
-              variant="rounded"
-              width={600}
-              height={50}
-            />
-            <Skeleton
-              animation="wave"
-              variant="rounded"
-              width={600}
-              height={50}
-            />
-            <Skeleton
-              animation="wave"
-              variant="rounded"
-              width={600}
-              height={50}
-            />
-            <Skeleton
-              animation="wave"
-              variant="rounded"
-              width={600}
-              height={50}
-            />
-            <Skeleton
-              animation="wave"
-              variant="rounded"
-              width={100}
-              height={50}
-            />
-          </Column>
-        }
-      >
+      <Suspense fallback={<Skeleton />}>
         <BrowserRouter>
           <App />
         </BrowserRouter>
