@@ -17,10 +17,12 @@ import {
   Typography,
 } from "@mui/material";
 import { decode } from "he";
+import { useRecoilCallback } from "recoil";
 
 import { getQuiz } from "../../apis/quiz";
 import { Column, Row, Skeleton } from "../../components";
 import QuizList from "./QuizList";
+import { myAnswerAtom } from "../../atom/myAnswers";
 
 export default function Solve() {
   const [searchParams] = useSearchParams();
@@ -42,6 +44,25 @@ export default function Solve() {
       return getQuiz({ amount, category, difficulty, type });
     },
   });
+
+  const handleClickNextButton = useRecoilCallback(
+    ({ set }) =>
+      () => {
+        set(myAnswerAtom, (prev) => {
+          const [myAnswer, correctAnswer] = [
+            checkedAnswer || "",
+            data?.results[activeStep].correct_answer || "",
+          ];
+          return [
+            ...prev,
+            { myAnswer, correctAnswer, isCorrect: myAnswer === correctAnswer },
+          ];
+        });
+        setActiveStep(activeStep + 1);
+        setCheckedAnswer(null);
+      },
+    [checkedAnswer]
+  );
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedAnswer(ev.target.value);
@@ -113,10 +134,7 @@ export default function Solve() {
         </Stepper>
         <Button
           disabled={checkedAnswer === null}
-          onClick={() => {
-            setActiveStep(activeStep + 1);
-            setCheckedAnswer(null);
-          }}
+          onClick={handleClickNextButton}
           variant="contained"
         >
           {activeStep < data.results.length - 1 ? "Solve Next" : "Submit"}
