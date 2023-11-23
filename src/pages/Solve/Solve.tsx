@@ -6,7 +6,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Button,
   FormControl,
@@ -20,7 +20,7 @@ import { decode } from "he";
 import { useRecoilCallback } from "recoil";
 
 import { getQuiz } from "../../apis/quiz";
-import { Column, Row, Skeleton } from "../../components";
+import { Column, Row, Skeleton, WhatIF } from "../../components";
 import QuizList from "./QuizList";
 import { myAnswerAtom } from "../../atom/myAnswers";
 
@@ -28,6 +28,7 @@ export default function Solve() {
   const [searchParams] = useSearchParams();
   const [activeStep, setActiveStep] = useState(0);
   const [checkedAnswer, setCheckedAnswer] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const solveQueries = useMemo(() => {
     const result: Record<string, string> = {};
@@ -48,20 +49,29 @@ export default function Solve() {
   const handleClickNextButton = useRecoilCallback(
     ({ set }) =>
       () => {
-        set(myAnswerAtom, (prev) => {
-          const [myAnswer, correctAnswer] = [
-            checkedAnswer || "",
-            data?.results[activeStep].correct_answer || "",
-          ];
-          return [
-            ...prev,
-            { myAnswer, correctAnswer, isCorrect: myAnswer === correctAnswer },
-          ];
-        });
-        setActiveStep(activeStep + 1);
-        setCheckedAnswer(null);
+        if (!data?.results) return;
+        if (activeStep < data.results.length - 1) {
+          set(myAnswerAtom, (prev) => {
+            const [myAnswer, correctAnswer] = [
+              checkedAnswer || "",
+              data?.results[activeStep].correct_answer || "",
+            ];
+            return [
+              ...prev,
+              {
+                myAnswer,
+                correctAnswer,
+                isCorrect: myAnswer === correctAnswer,
+              },
+            ];
+          });
+          setActiveStep(activeStep + 1);
+          setCheckedAnswer(null);
+          return;
+        }
+        navigate("/result");
       },
-    [checkedAnswer]
+    [checkedAnswer, data?.results]
   );
 
   const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,6 +142,16 @@ export default function Solve() {
             );
           })}
         </Stepper>
+        {checkedAnswer && (
+          <WhatIF
+            condition={
+              checkedAnswer === data.results[activeStep].correct_answer
+            }
+            falsy={<Typography color="red">InCorrect</Typography>}
+          >
+            <Typography color="green">Correct</Typography>
+          </WhatIF>
+        )}
         <Button
           disabled={checkedAnswer === null}
           onClick={handleClickNextButton}
