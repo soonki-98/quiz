@@ -5,4 +5,4 @@
  */
 
 export { default as Main } from "./Main";
-export { default as Solve } from "./Solve";
+export * from "./Solve";

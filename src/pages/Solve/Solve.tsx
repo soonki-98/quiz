@@ -10,10 +10,7 @@ import { useSearchParams } from "react-router-dom";
 import {
   Button,
   FormControl,
-  FormControlLabel,
   FormLabel,
-  Radio,
-  RadioGroup,
   Step,
   StepLabel,
   Stepper,
@@ -21,16 +18,14 @@ import {
 } from "@mui/material";
 import { decode } from "he";
 
-import { getQuiz } from "../apis/quiz";
-import { Column, Row } from "../components";
-
-function shuffle<T>(array: T[]) {
-  return array.sort(() => Math.random() - 0.5);
-}
+import { getQuiz } from "../../apis/quiz";
+import { Column, Row } from "../../components";
+import QuizList from "./QuizList";
 
 export default function Solve() {
   const [searchParams] = useSearchParams();
   const [activeStep, setActiveStep] = useState(0);
+  const [checkedAnswer, setCheckedAnswer] = useState<string | null>(null);
 
   const solveQueries = useMemo(() => {
     const result: Record<string, string> = {};
@@ -47,6 +42,10 @@ export default function Solve() {
       return getQuiz({ amount, category, difficulty, type });
     },
   });
+
+  const handleChange = (ev: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckedAnswer(ev.target.value);
+  };
 
   if (!data) return null;
   return (
@@ -80,21 +79,11 @@ export default function Solve() {
                         {decode(quiz.question)}
                       </Typography>
                     </FormLabel>
-                    <RadioGroup>
-                      {shuffle([
-                        ...quiz.incorrect_answers,
-                        quiz.correct_answer,
-                      ]).map((answer) => {
-                        return (
-                          <FormControlLabel
-                            value={answer}
-                            key={answer}
-                            control={<Radio />}
-                            label={answer}
-                          />
-                        );
-                      })}
-                    </RadioGroup>
+                    <QuizList
+                      incorrectAnswers={quiz.incorrect_answers}
+                      correctAnswer={quiz.correct_answer}
+                      onChange={handleChange}
+                    />
                   </FormControl>
 
                   <Row gap={10}>
@@ -117,7 +106,11 @@ export default function Solve() {
           })}
         </Stepper>
         <Button
-          onClick={() => setActiveStep(activeStep + 1)}
+          disabled={checkedAnswer === null}
+          onClick={() => {
+            setActiveStep(activeStep + 1);
+            setCheckedAnswer(null);
+          }}
           variant="contained"
         >
           {activeStep < data.results.length - 1 ? "Solve Next" : "Submit"}
