@@ -3,7 +3,7 @@ import { instance } from "./instance";
 type Quiz = {
   category: string;
   correct_answer: string;
-  difficulty: string;
+  difficulty: "easy" | "medium" | "hard";
   incorrect_answers: string[];
   question: string;
   type: "multiple" | "boolean";
