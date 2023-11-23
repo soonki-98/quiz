@@ -64,7 +64,7 @@ export default function Main() {
           margin: "0 auto",
         }}
       >
-        <Typography variant="h3" component="h1">
+        <Typography variant="h3" component="h1" data-testid="solve-quiz">
           Solve Quiz
         </Typography>
         {/** 문제의 갯수 */}
@@ -130,7 +130,11 @@ export default function Main() {
         </FormControl>
 
         {/** 문제풀이 시작 버튼*/}
-        <Button variant="contained" onClick={handleSubmit}>
+        <Button
+          variant="contained"
+          onClick={handleSubmit}
+          data-testid="start-solve-quiz"
+        >
           Solve Quiz
         </Button>
       </Column>
