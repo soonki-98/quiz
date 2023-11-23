@@ -19,6 +19,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
+import { decode } from "he";
 
 import { getQuiz } from "../apis/quiz";
 import { Column, Row } from "../components";
@@ -76,10 +77,10 @@ export default function Solve() {
                   <FormControl>
                     <FormLabel>
                       <Typography variant="body1" color="CaptionText">
-                        {quiz.question}
+                        {decode(quiz.question)}
                       </Typography>
                     </FormLabel>
-                    <RadioGroup row>
+                    <RadioGroup>
                       {shuffle([
                         ...quiz.incorrect_answers,
                         quiz.correct_answer,
